@@ -3,17 +3,16 @@ import AbstractView from './../utils/abstract.js';
 const renderedFieldsets = [];
 
 
-const createFieldByFieldset = (fieldset, fields, fieldsets) => {
-  const filteredFieldData = fields.filter((input) => input.fieldset === fieldset);
-  console.log(filteredFieldData)
+const createFieldByFieldset = (currentFieldset, fields) => {
+  const filteredFieldData = fields.filter((input) => input.fieldset === currentFieldset);
 
   return filteredFieldData.map(({label, type, id, isRequired}) => {
-    return `<li class='form__item form__item--${type}'>${createInput(label, type, id, isRequired)}</li>`;
+    return `<li class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</li>`;
   }).join('');
 }
 
 const createSingleField = (label, type, id, isRequired) => {
-  return `<p class='form__item form__item--${type}'>${createInput(label, type, id, isRequired)}</p>`;
+  return `<p class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</p>`;
 };
 
 
@@ -34,11 +33,23 @@ const createFieldset = (fieldset, fields, fieldsets) => {
 }
 
 
-const createInput = (label, type, id, isRequired) => {
+const createTextarea = (label, type, id, isRequired) => {
+  return (
+    `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
+<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${isRequired ? 'required' : ''}></textarea>`
+  );
+}
+
+
+const createField = (label, type, id, isRequired) => {
+  if (type === 'textarea') {
+    return createTextarea(label, type, id, isRequired);
+  }
+
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
 <input class='form__control form__control--${type}' type='${type}' id='${id}' ${isRequired ? 'required' : ''}/>`
-  )
+  );
 }
 
 

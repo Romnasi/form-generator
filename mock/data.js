@@ -47,8 +47,7 @@ export const data = `{
       "isRequired": true,
       "fieldset": "fio"
     },
-    {
-      "label": "Фамилия латиницей",
+    {      "label": "Фамилия латиницей",
       "type": "text",
       "id": "lat-lastname",
       "isRequired": true,
@@ -58,6 +57,12 @@ export const data = `{
       "label": "Возраст",
       "type": "number",
       "id": "age",
+      "isRequired": false
+    },
+    {
+      "label": "Ваша автобиография",
+      "type": "textarea",
+      "id": "bio",
       "isRequired": false
     }
   ],
