@@ -63,7 +63,8 @@ export const data = `{
       "label": "Ваша автобиография",
       "type": "textarea",
       "id": "bio",
-      "isRequired": false
+      "isRequired": false,
+      "fieldset": "biog"
     }
   ],
   "submit": {

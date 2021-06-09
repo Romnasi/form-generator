@@ -160,6 +160,12 @@ img {
   flex-direction: row;
 }
 
+
+.form__item--radio {
+  flex-direction: row;
+}
+
+
 .form__label {
   margin-bottom: 8px;
   font-size: 14px;
@@ -167,6 +173,11 @@ img {
 }
 
 .form__label--checkbox {
+  order: 1;
+}
+
+
+.form__label--radio {
   order: 1;
 }
 
@@ -185,7 +196,14 @@ img {
   border-radius: 6px;
 }
 
+
 .form__control--checkbox {
+  margin-right: 14px;
+  order: -1;
+}
+
+
+.form__control--radio {
   margin-right: 14px;
   order: -1;
 }

@@ -3,13 +3,12 @@ import AbstractView from './../utils/abstract.js';
 const renderedFieldsets = [];
 
 
-const createFieldByFieldset = (currentFieldset, fields) => {
-  const filteredFieldData = fields.filter((input) => input.fieldset === currentFieldset);
-
-  return filteredFieldData.map(({label, type, id, isRequired}) => {
+const createFieldByFieldset = (fieldData) => {
+  return fieldData.map(({label, type, id, isRequired}) => {
     return `<li class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</li>`;
   }).join('');
 }
+
 
 const createSingleField = (label, type, id, isRequired) => {
   return `<p class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</p>`;
@@ -19,14 +18,22 @@ const createSingleField = (label, type, id, isRequired) => {
 const createFieldset = (fieldset, fields, fieldsets) => {
   renderedFieldsets.push(fieldset);
 
+  const filteredFieldData = fields.filter((field) => field.fieldset === fieldset);
+
+  // Если в fieldset только 1 поле - это не fieldset
+  if (filteredFieldData.length === 1) {
+    const [{label, type, id, isRequired}] = filteredFieldData;
+    return createField(label, type, id, isRequired);
+  }
+
   const fieldsetData = fieldsets.find((fieldsetData) => fieldsetData.name === fieldset);
   const {legend, legendVH} = fieldsetData;
 
   return (
-    `<fieldset class='form__fieldset'>
-        <legend class='form__legend ${legendVH ? 'visually-hidden' : ''}'>${legend}</legend>
-        <ul class='form__list'>
-          ${createFieldByFieldset(fieldset, fields, fieldsets)}
+    `<fieldset class='form__fieldset form__fieldset--${fieldset}'>
+        <legend class='form__legend form__legend--${fieldset} ${legendVH ? 'visually-hidden' : ''}'>${legend}</legend>
+        <ul class='form__list form__list--${fieldset}'>
+          ${createFieldByFieldset(filteredFieldData)}
         </ul>
      </fieldset>`
   );
@@ -56,6 +63,8 @@ const createField = (label, type, id, isRequired) => {
 const createFields = (fields, fieldsets) => {
 
   return fields.map(({label, type, id, isRequired, fieldset}) => {
+    // Если поле содержит fieldset функция сразу создаст все поля с таким же fieldset'ом
+    // поэтому поля с таким же значением пропускаем
     if (fieldset) {
       return !renderedFieldsets.includes(fieldset)
         ? createFieldset(fieldset, fields, fieldsets)
@@ -63,7 +72,6 @@ const createFields = (fields, fieldsets) => {
     } else {
       return  createSingleField(label, type, id, isRequired);
     }
-
   }).join('');
 };
 
