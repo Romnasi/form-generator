@@ -23,15 +23,11 @@ const createSelect = (label, type, id, option) => {
 
 
 const createFieldByFieldset = (fieldData) => {
-  return fieldData.map(({label, type, id, isRequired}) => {
-    return `<li class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</li>`;
+  return fieldData.map(({label, type, id, option}) => {
+    const {required} = option;
+    return `<li class='form__item form__item--${type}'>${createField(label, type, id, required)}</li>`;
   }).join('');
 }
-
-
-const createSingleField = (label, type, id, isRequired) => {
-  return `<p class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</p>`;
-};
 
 
 const createFieldset = (fieldset, fields, fieldsets) => {
@@ -41,8 +37,8 @@ const createFieldset = (fieldset, fields, fieldsets) => {
 
   // Если в fieldset только 1 поле - это не fieldset
   if (filteredFieldData.length === 1) {
-    const [{label, type, id, isRequired}] = filteredFieldData;
-    return createSingleField(label, type, id, isRequired);
+    const [{label, type, id, option: {required}}] = filteredFieldData;
+    return createSingleField(label, type, id, required);
   }
 
   const fieldsetData = fieldsets.find((fieldsetData) => fieldsetData.name === fieldset);
@@ -59,32 +55,41 @@ const createFieldset = (fieldset, fields, fieldsets) => {
 }
 
 
-const createTextarea = (label, type, id, isRequired, readonly) => {
+const createTextarea = (label, type, id, option) => {
+  const {required} = option;
+
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
-<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${readonly ? 'readonly' : ''} ${isRequired ? 'required' : ''}></textarea>`
+<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${required ? 'required' : ''}></textarea>`
   );
 }
 
 
-const createField = (label, type, id, isRequired) => {
+const createField = (label, type, id, option) => {
   if (type === 'textarea') {
-    return createTextarea(label, type, id, isRequired);
+    return createTextarea(label, type, id, option);
   }
   if (type === 'select') {
-    return createSelect(label, type, id, isRequired);
+    return createSelect(label, type, id, option);
   }
+
+  const {required} = option;
 
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
-<input class='form__control form__control--${type}' type='${type}' id='${id}' ${isRequired ? 'required' : ''}/>`
+<input class='form__control form__control--${type}' type='${type}' id='${id}' ${required ? 'required' : ''}/>`
   );
 }
+
+
+const createSingleField = (label, type, id, option) => {
+  return `<p class='form__item form__item--${type}'>${createField(label, type, id, option)}</p>`;
+};
 
 
 const createFields = (fields, fieldsets) => {
 
-  return fields.map(({label, type, id, isRequired, fieldset}) => {
+  return fields.map(({label, type, id, option, fieldset}) => {
     // Если поле содержит fieldset функция сразу создаст все поля с таким же fieldset'ом
     // поэтому поля с таким же значением пропускаем
     if (fieldset) {
@@ -92,7 +97,7 @@ const createFields = (fields, fieldsets) => {
         ? createFieldset(fieldset, fields, fieldsets)
         : '';
     } else {
-      return  createSingleField(label, type, id, isRequired);
+      return  createSingleField(label, type, id, option);
     }
   }).join('');
 };

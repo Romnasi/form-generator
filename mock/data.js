@@ -21,42 +21,54 @@ export const data = `{
       "label": "Фамилия",
       "type": "text",
       "id": "lastname",
-      "isRequired": true,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": true
+      }
     },
     {
       "label": "Ранее менялась",
       "type": "checkbox",
       "id": "lastnameIsChanged",
-      "isRequired": false,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": false
+      }
     },
     {
       "label": "Имя",
       "type": "text",
       "id": "name",
-      "isRequired": true,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": true
+      }
     },
     {
       "label": "Отчество",
       "type": "text",
       "id": "patronymic",
-      "isRequired": false,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": true
+      }
     },
     {
       "label": "Имя латиницей",
       "type": "text",
       "id": "lat-name",
-      "isRequired": true,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": true
+      }
     },
     {      "label": "Фамилия латиницей",
       "type": "text",
       "id": "lat-lastname",
-      "isRequired": true,
-      "fieldset": "fio"
+      "fieldset": "fio",
+      "option": {
+        "required": true
+      }
     },
     {
       "label": "Год рождения",
@@ -80,7 +92,9 @@ export const data = `{
       "label": "Ваша автобиография",
       "type": "textarea",
       "id": "bio",
-      "isRequired": false
+      "option": {
+        "required": false
+      }
     }
   ],
   "submit": {
