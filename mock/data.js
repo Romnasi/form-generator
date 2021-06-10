@@ -9,6 +9,11 @@ export const data = `{
       "name": "fio",
       "legend": "ФИО заявителя",
       "legendVH": false
+    },
+    {
+      "name": "birth-date",
+      "legend": "Дата рождения",
+      "legendVH": false
     }
   ],
   "fields": [
@@ -54,17 +59,28 @@ export const data = `{
       "fieldset": "fio"
     },
     {
-      "label": "Возраст",
-      "type": "number",
+      "label": "Год рождения",
+      "type": "select",
       "id": "age",
-      "isRequired": false
+      "fieldset": "birth-date",
+      "option": {
+        "placeholder": "выберите год"
+      }
+    },
+    {
+      "label": "Дата рождения",
+      "type": "select",
+      "id": "age",
+      "fieldset": "birth-date",
+      "option": {
+        "placeholder": "выберите месяц"
+      }
     },
     {
       "label": "Ваша автобиография",
       "type": "textarea",
       "id": "bio",
-      "isRequired": false,
-      "fieldset": "biog"
+      "isRequired": false
     }
   ],
   "submit": {

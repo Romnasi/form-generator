@@ -3,6 +3,25 @@ import AbstractView from './../utils/abstract.js';
 const renderedFieldsets = [];
 
 
+const createSelect = (label, type, id, option) => {
+  return (`<span class="form__label form__label--select" id="${id}">
+      ${label}
+    </span>
+    <div class="form__select-wrapper">
+      <select class="form__select-native" aria-labelledby="${id}">
+        <option value="sel" disabled="" selected=""> Select role...</option>
+      </select>
+
+      <div class="form__select-custom js-selectCustom" aria-hidden="true">
+        <div class="form__select-custom--trigger">Select role...</div>
+        <div class="selectCustom-options">
+          <div class="selectCustom-option" data-value="ds">UI/UX Designer</div>
+        </div>
+      </div>
+    </div>`);
+}
+
+
 const createFieldByFieldset = (fieldData) => {
   return fieldData.map(({label, type, id, isRequired}) => {
     return `<li class='form__item form__item--${type}'>${createField(label, type, id, isRequired)}</li>`;
@@ -23,7 +42,7 @@ const createFieldset = (fieldset, fields, fieldsets) => {
   // Если в fieldset только 1 поле - это не fieldset
   if (filteredFieldData.length === 1) {
     const [{label, type, id, isRequired}] = filteredFieldData;
-    return createField(label, type, id, isRequired);
+    return createSingleField(label, type, id, isRequired);
   }
 
   const fieldsetData = fieldsets.find((fieldsetData) => fieldsetData.name === fieldset);
@@ -40,10 +59,10 @@ const createFieldset = (fieldset, fields, fieldsets) => {
 }
 
 
-const createTextarea = (label, type, id, isRequired) => {
+const createTextarea = (label, type, id, isRequired, readonly) => {
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
-<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${isRequired ? 'required' : ''}></textarea>`
+<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${readonly ? 'readonly' : ''} ${isRequired ? 'required' : ''}></textarea>`
   );
 }
 
@@ -51,6 +70,9 @@ const createTextarea = (label, type, id, isRequired) => {
 const createField = (label, type, id, isRequired) => {
   if (type === 'textarea') {
     return createTextarea(label, type, id, isRequired);
+  }
+  if (type === 'select') {
+    return createSelect(label, type, id, isRequired);
   }
 
   return (
