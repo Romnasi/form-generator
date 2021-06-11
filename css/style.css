@@ -5,12 +5,14 @@
   --blue_200: #5c9ce6;
   --gray: #333333;
   --steel-gray: #F7F8FA;
+  --steel-gray-120: #D3D9DE;
   --for-border: #D3D9DE;
   --button_primary_background: #4986cc;
   --button_primary_foreground: #ffffff;
   --accent: #3f8ae0;
   --hover-border: rgba(0, 0, 0, 0.24);
   --text_primary: #000000;
+  --background_page: #ebedf0;
 
   /* Media-queries */
   --mobile-width: 320px;
@@ -78,14 +80,16 @@ img {
   overflow: hidden;
 }
 
+/* Container */
 .container {
   min-width: 288px;
   padding: 0 16px;
 }
 
-@media (min-width: var(--tablet-width)) {
+@media (min-width: 768px) {
   .container {
-    padding: 0 30px;
+
+    padding: 0 24px;
   }
 }
 
@@ -97,27 +101,45 @@ img {
 }
 
 
+.body {
+  display: grid;
+  background-color: var(--background_page);
+}
+
+
 /* Demo */
 .demo__title {
-  margin: 25px 0;
-  padding-left: 16px;
-  padding-right: 16px;
+  margin: 0;
+  padding: 25px 16px;
   font-family: var(--font-tt);
   font-size: 28px;
 }
 
+@media (min-width: 768px) {
+  .demo__title {
+    padding: 25px 40px;
+  }
+}
 
 /* Form*/
 .form {
   display: grid;
   grid-template-columns: 1fr;
+  background-color: var(--white)
+}
+
+@media (min-width: 768px) {
+  .form {
+    box-sizing: border-box;
+    background-color: var(--background_page);
+  }
 }
 
 .form__title {
   margin: 0;
   margin-bottom: 12px;
-  padding-top: 13px;
-  padding-bottom: 13px;
+  padding: 13px 16px;
+  background-color: var(--white);
 
   font-size: 23px;
   line-height: 28px;
@@ -126,6 +148,29 @@ img {
   font-weight: 800;
 }
 
+@media (min-width: 768px) {
+  .form__title {
+    margin-bottom: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    border: none;
+  }
+}
+
+.form-wrapper {
+  background-color: var(--white);
+
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .form-wrapper {
+    margin: 0 16px;
+    margin: 20px;
+  }
+}
 
 .form__fieldset {
   margin: 0;
@@ -192,6 +237,7 @@ img {
   box-sizing: border-box;
   padding: 9px 12px;
 
+  font-family: var(--font-common);
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
@@ -202,6 +248,11 @@ img {
   border-radius: 6px;
 }
 
+
+@media (min-width: 768px) {
+
+}
+
 .form__control:focus {
   border-color: var(--accent);
   outline: none;
@@ -210,6 +261,11 @@ img {
 
 .form__control:hover {
   border-color: var(--hover-border);
+}
+
+
+.form-control::placeholder {
+  color: var(--steel-gray);
 }
 
 
@@ -233,7 +289,7 @@ img {
   padding-left: 15px;
   padding-right: 15px;
   font-family: inherit;
-  min-height: 30px;
+  min-height: 32px;
   color: var(--button_primary_foreground);
   background-color: var(--button_primary_background);
   border: 1px solid transparent;
@@ -332,25 +388,22 @@ img {
   background-color: var(--steel-gray);
   padding: 9px 12px;
   cursor: pointer;
-  z-index: 2;
 }
 
 
 .form__select-custom--trigger::after {
   position: absolute;
   content: '';
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cpath d="M0 0h24v24H0z"%3E%3C/path%3E%3Cpath d="M12 14.198L6.64 9.732a1 1 0 10-1.28 1.536l6 5a1 1 0 001.28 0l6-5a1 1 0 10-1.28-1.536L12 14.198z" fill="rgba(0, 0, 0, 0.36" fill-rule="nonzero"%3E%3C/path%3E%3C/g%3E%3C/svg%3E');
   top: 7px;
   left: calc(100% - 24px - 10px);
   width: 24px;
   height: 24px;
-
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cpath d="M0 0h24v24H0z"%3E%3C/path%3E%3Cpath d="M12 14.198L6.64 9.732a1 1 0 10-1.28 1.536l6 5a1 1 0 001.28 0l6-5a1 1 0 10-1.28-1.536L12 14.198z" fill="rgba(0, 0, 0, 0.36" fill-rule="nonzero"%3E%3C/path%3E%3C/g%3E%3C/svg%3E');
-
 }
 
 
 .form__select-custom--trigger:hover {
-  border-color: var(--accent);
+  border-color: var(--hover-border);
 }
 
 
@@ -360,7 +413,7 @@ img {
   left: 0;
   width: 100%;
   border: 1px solid var(--steel-gray);
-  border-radius: 0 6px;
+  border-radius: 0 0 6px 6px;
   background-color: #fff;
   z-index: 1;
   padding: 5px 0;
@@ -368,6 +421,12 @@ img {
 
   overflow: hidden auto;
   height: 150px;
+  border: 1px solid var(--for-border)
+}
+
+
+.form__option {
+  padding: 9px 12px;
 }
 
 
@@ -379,7 +438,7 @@ img {
 .selectCustom-option {
   position: relative;
   padding: 0.8rem;
-  padding-left: 2.5rem;
+  padding-left: 12px;
 }
 
 
@@ -400,5 +459,5 @@ img {
 .selectCustom-option.isActive::before {
   content: "✓";
   position: absolute;
-  left: 0.8rem;
+  left: calc(100% - 24px - 10px);;
 }
