@@ -9,6 +9,7 @@
   --for-border: #D3D9DE;
   --button_primary_background: #4986cc;
   --button_primary_foreground: #ffffff;
+  --button-accent: #5181b8;
   --accent: #3f8ae0;
   --hover-border: rgba(0, 0, 0, 0.24);
   --text_primary: #000000;
@@ -296,6 +297,9 @@ img {
   border-radius: 8px;
 }
 
+.form__button-submit:hover {
+  background-color: var(--button-accent);
+}
 
 /* Гибридный селект */
 .form__select-native,

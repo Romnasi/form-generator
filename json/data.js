@@ -1,8 +1,10 @@
 export const data = `{
   "form": {
-    "action": "www.example.ru",
+    "action": "https://echo.htmlacademy.ru",
     "method": "post",
     "title": "Заявка на экскурсионный полёт на Марс",
+    "autocomplete": "off",
+    "enctype": "multipart/form-data",
     "btnText": "Полететь на Марс"
   },
   "fieldsets": [
@@ -25,7 +27,8 @@ export const data = `{
       "fieldset": "fio",
       "option": {
         "required": true,
-        "placeholder": "Введите фамилию"
+        "placeholder": "Введите фамилию",
+        "name": "lastname"
       }
     },
     {
@@ -34,7 +37,8 @@ export const data = `{
       "id": "lastnameIsChanged",
       "fieldset": "fio",
       "option": {
-        "required": false
+        "required": false,
+        "name": "lastnameIsChanged"
       }
     },
     {
@@ -44,7 +48,8 @@ export const data = `{
       "fieldset": "fio",
       "option": {
         "required": true,
-        "placeholder": "Введите имя"
+        "placeholder": "Введите имя",
+        "name": "name"
       }
     },
     {
@@ -54,7 +59,8 @@ export const data = `{
       "fieldset": "fio",
       "option": {
         "required": false,
-        "placeholder": "Введите отчество"
+        "placeholder": "Введите отчество",
+        "name": "patronymic"
       }
     },
     {
@@ -63,15 +69,20 @@ export const data = `{
       "id": "lat-name",
       "fieldset": "fio",
       "option": {
-        "required": true
+        "required": true,
+        "name": "lat-name",
+        "pattern": "[A-Za-z]"
       }
     },
-    {      "label": "Фамилия латиницей",
+    {
+      "label": "Фамилия латиницей",
       "type": "text",
       "id": "lat-lastname",
       "fieldset": "fio",
       "option": {
-        "required": true
+        "required": true,
+        "name": "lat-lastname",
+        "pattern": "[A-Za-z]"
       }
     },
     {
@@ -80,9 +91,10 @@ export const data = `{
       "id": "birth-year",
       "fieldset": "birth-date",
       "option": {
-        "placeholder": "выберите год",
+        "placeholder": "Выберите год",
         "valueStart": 1900,
-        "valueEnd": 2003
+        "valueEnd": 2003,
+        "name": "birth-year"
       }
     },
     {
@@ -91,20 +103,33 @@ export const data = `{
       "id": "birth-month",
       "fieldset": "birth-date",
       "option": {
-        "placeholder": "выберите месяц",
+        "placeholder": "Выберите месяц",
         "valueStart": 1,
-        "valueEnd": 12
+        "valueEnd": 12,
+        "name": "birth-month"
       }
     },
     {
       "label": "День рождения",
       "type": "select",
-      "id": "birth-month",
+      "id": "birth-day",
       "fieldset": "birth-date",
       "option": {
-        "placeholder": "выберите день",
+        "placeholder": "Выберите день",
         "valueStart": 1,
-        "valueEnd": 31
+        "valueEnd": 31,
+        "name": "birth-day"
+      }
+    },
+    {
+      "label": "Семейное положение",
+      "type": "select",
+      "id": "family-status",
+      "fieldset": "birth-date",
+      "option": {
+        "placeholder": "Выберите ваш статус",
+        "selValues": ["женат/замужем", "в «гражданском браке»", "разведён", "холост", "вдовец"],
+        "name": "family-status"
       }
     },
     {
@@ -112,7 +137,31 @@ export const data = `{
       "type": "textarea",
       "id": "bio",
       "option": {
-        "required": false
+        "required": false,
+        "placeholder": "В развлекательном стиле",
+        "name": "bio"
+      }
+    },
+    {
+      "label": "Номер вашей заявки",
+      "type": "text",
+      "id": "request-number",
+      "option": {
+        "required": false,
+        "value": "34534-4234-43344",
+        "readonly": true,
+        "name": "request-number"
+      }
+    },
+    {
+      "label": "Размер обуви",
+      "type": "number",
+      "id": "shoe-size",
+      "option": {
+        "min": 20,
+        "max": 55,
+        "step": 1,
+        "name": "shoe-size"
       }
     }
   ]

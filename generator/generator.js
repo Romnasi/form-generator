@@ -5,9 +5,36 @@ const renderedFieldsets = [];
 let lastId = 0;
 
 
+
+const translitToLat = (str) => {
+  const ru = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
+    'е': 'e', 'ё': 'e', 'ж': 'j', 'з': 'z', 'и': 'i',
+    'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+    'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+    'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh',
+    'щ': 'shch', 'ы': 'y', 'э': 'e', 'ю': 'u', 'я': 'ya',
+    ' ': '-', '«': '', '»': '', '/': '-'
+  }, n_str = [];
+
+  str = str.replace(/[ъь]+/g, '').replace(/й/g, 'i');
+
+  for ( var i = 0; i < str.length; ++i ) {
+    n_str.push(
+      ru[ str[i] ]
+      || ru[ str[i].toLowerCase() ] == undefined && str[i]
+      || ru[ str[i].toLowerCase() ].toUpperCase()
+    );
+  }
+
+  return n_str.join('');
+}
+
+
 const createOptionSet = (option, id, isOption) => {
-  if (option.valueStart) {
-    const {valueStart, valueEnd} = option;
+  const {valueStart, valueEnd, selValues} = option;
+
+  if (valueStart) {
     let optionSet = '';
     for (let i = valueStart; i <= valueEnd; i++) {
       optionSet += `<${isOption ? `option class="form__option" value="${id + '-' + i}` : `div class="selectCustom-option" data-value="${id + i}"`}">
@@ -17,7 +44,16 @@ const createOptionSet = (option, id, isOption) => {
     }
     return optionSet
   }
-  return `<option value="sel">sfdfsd</option>`
+
+  let optionSet = '';
+  for (let i = 0; i < selValues.length; i++) {
+    const latvalue = translitToLat(selValues[i]);
+    optionSet += `<${isOption ? `option class="form__option" value="${latvalue}` : `div class="selectCustom-option" data-value="${latvalue}"`}">
+        ${selValues[i]}
+      </${isOption ? 'option' : `div`}>`;
+    lastId = i;
+  }
+  return optionSet
 }
 
 
@@ -54,24 +90,27 @@ const createFieldset = (fieldset, fields, fieldsets) => {
 
 
 const createTextarea = (label, type, id, option) => {
-  const {required} = option;
+  const {required, placeholder, value, readonly} = option;
 
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
-<textarea class='form__control form__control--${type}' type='${type}' id='${id}' ${required ? 'required' : ''}></textarea>`
+<textarea class='form__control form__control--${type}' type='${type}' id='${id}'
+${value ? `value="${value}"` : ''} ${readonly ? 'readonly' : ''} ${required ? 'required' : ''}>
+${placeholder ? placeholder : ''}
+</textarea>`
   );
 }
 
 
 const createSelect = (label, type, id, option) => {
-  const {placeholder} = option;
+  const {placeholder, name} = option;
 
   return (`<span class="form__label form__label--select" id="${id}">
       ${label}
     </span>
     <div class="form__select-wrapper">
-      <select class="form__select-native" aria-labelledby="${id}">
-        <option value="sel" disabled="" selected="">${placeholder}</option>
+      <select class="form__select-native" ${name ? `name="${name}"` : ''} aria-labelledby="${id}">
+        <option value="default" disabled="" selected="">${placeholder}</option>
         ${createOptionSet(option, id, true)}
 
       </select>
@@ -86,6 +125,33 @@ const createSelect = (label, type, id, option) => {
 }
 
 
+const createFieldWithDigits = (label, type, id, option) => {
+  const {required, placeholder, min, max, step, value, readonly, name, pattern} = option;
+
+  return (
+    `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
+<input class='form__control form__control--${type}' type='${type}' id='${id}'
+${ min ? `min="${min}"` : '' } ${ max ? `max="${max}"` : '' } ${ step ? `step="${step}"` : '' }
+${placeholder ? `placeholder="${placeholder}"` : ''} ${value ? `value="${value}"` : ''}
+${name ? `name="${name}"` : ''} ${pattern ? `pattern="${pattern}"` : ''}
+${readonly ? 'readonly' : ''} ${required ? 'required' : ''}/>`
+  );
+}
+
+
+const createFieldWithCheck = (label, type, id, option) => {
+  const {required, placeholder, value, readonly, checked, name} = option;
+
+  return (
+    `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
+<input class='form__control form__control--${type}' type='${type}' id='${id}'
+${placeholder ? `placeholder="${placeholder}"` : ''} ${value ? `value="${value}"` : ''}
+${name ? `name="${name}"` : ''}
+${readonly ? 'readonly' : ''} ${checked ? 'checked' : ''} ${required ? 'required' : ''}/>`
+  );
+}
+
+
 const createField = (label, type, id, option) => {
   if (type === 'textarea') {
     return createTextarea(label, type, id, option);
@@ -93,12 +159,21 @@ const createField = (label, type, id, option) => {
   if (type === 'select') {
     return createSelect(label, type, id, option);
   }
+  if (type === 'number' || type === 'range' || type === 'date') {
+    return createFieldWithDigits(label, type, id, option);
+  }
+  if (type === 'checkbox' || type === 'radio') {
+    return createFieldWithCheck(label, type, id, option);
+  }
 
-  const {required, placeholder} = option;
+  const {required, placeholder, value, readonly, name, pattern} = option;
 
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
-<input class='form__control form__control--${type}' type='${type}' id='${id}' ${placeholder ? `placeholder="${placeholder}"` : ''} ${required ? 'required' : ''}/>`
+<input class='form__control form__control--${type}' type='${type}' id='${id}'
+${placeholder ? `placeholder="${placeholder}"` : ''} ${value ? `value="${value}"` : ''}
+${name ? `name="${name}"` : ''} ${pattern ? `pattern="${pattern}"` : ''}
+${readonly ? 'readonly' : ''} ${required ? 'required' : ''}/>`
   );
 }
 
@@ -130,10 +205,12 @@ const createSubmitButton = (text) => {
 
 
 const createFormTemplate = ({form, fields, fieldsets}) => {
-  const {action, method, title, btnText} = form;
+  const {action, method, title, autocomplete, enctype, btnText} = form;
 
   return (
-    `<form class='form' action='${action}' method='${method}'>
+    `<form class='form' action='${action}'
+${autocomplete ? `autocomplete="${autocomplete}"` : ''}
+${enctype ? `enctype="${enctype}"` : ''} method='${method}'>
         <h2 class='form__title'>${title}</h2>
         <div class="demo__form-wrapper form-wrapper container">
           ${createFields(fields, fieldsets)}
