@@ -2,7 +2,8 @@ export const data = `{
   "form": {
     "action": "www.example.ru",
     "method": "post",
-    "title": "Заявка на экскурсионный полёт на Марс"
+    "title": "Заявка на экскурсионный полёт на Марс",
+    "btnText": "Полететь на Марс"
   },
   "fieldsets": [
     {
@@ -23,7 +24,8 @@ export const data = `{
       "id": "lastname",
       "fieldset": "fio",
       "option": {
-        "required": true
+        "required": true,
+        "placeholder": "Введите фамилию"
       }
     },
     {
@@ -41,7 +43,8 @@ export const data = `{
       "id": "name",
       "fieldset": "fio",
       "option": {
-        "required": true
+        "required": true,
+        "placeholder": "Введите имя"
       }
     },
     {
@@ -50,7 +53,8 @@ export const data = `{
       "id": "patronymic",
       "fieldset": "fio",
       "option": {
-        "required": true
+        "required": false,
+        "placeholder": "Введите отчество"
       }
     },
     {
@@ -73,19 +77,34 @@ export const data = `{
     {
       "label": "Год рождения",
       "type": "select",
-      "id": "age",
+      "id": "birth-year",
       "fieldset": "birth-date",
       "option": {
-        "placeholder": "выберите год"
+        "placeholder": "выберите год",
+        "valueStart": 1900,
+        "valueEnd": 2003
       }
     },
     {
-      "label": "Дата рождения",
+      "label": "Месяц рождения",
       "type": "select",
-      "id": "age",
+      "id": "birth-month",
       "fieldset": "birth-date",
       "option": {
-        "placeholder": "выберите месяц"
+        "placeholder": "выберите месяц",
+        "valueStart": 1,
+        "valueEnd": 12
+      }
+    },
+    {
+      "label": "День рождения",
+      "type": "select",
+      "id": "birth-month",
+      "fieldset": "birth-date",
+      "option": {
+        "placeholder": "выберите день",
+        "valueStart": 1,
+        "valueEnd": 31
       }
     },
     {
@@ -96,8 +115,5 @@ export const data = `{
         "required": false
       }
     }
-  ],
-  "submit": {
-    "text": "Полететь на Марс"
-  }
+  ]
 }`
