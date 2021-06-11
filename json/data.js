@@ -133,6 +133,16 @@ export const data = `{
       }
     },
     {
+      "label": "Образование",
+      "type": "select",
+      "id": "education",
+      "option": {
+        "placeholder": "Выберите образование",
+        "selValues": ["высшее", "среднее специальное", "среднее", "студент"],
+        "name": "education"
+      }
+    },
+    {
       "label": "Ваша автобиография",
       "type": "textarea",
       "id": "bio",

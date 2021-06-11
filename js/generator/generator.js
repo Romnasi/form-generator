@@ -1,5 +1,7 @@
 import AbstractView from '../utils/abstract.js';
 import {translitToLat} from "../utils/utils";
+import {CSSStore} from "../CSS-store/CSS-store";
+import {usedFormElements} from "../CSS-store/CSS-store";
 
 
 const renderedFieldsets = [];
@@ -23,8 +25,8 @@ const createOptionSet = (option, id, isOption) => {
 
   let optionSet = '';
   for (let i = 0; i < selValues.length; i++) {
-    const latvalue = translitToLat(selValues[i]);
-    optionSet += `<${isOption ? `option class="form__option" value="${latvalue}` : `div class="selectCustom-option" data-value="${latvalue}"`}">
+    const latValue = translitToLat(selValues[i]);
+    optionSet += `<${isOption ? `option class="form__option" value="${latValue}` : `div class="selectCustom-option" data-value="${latValue}"`}">
         ${selValues[i]}
       </${isOption ? 'option' : `div`}>`;
     lastId = i;
@@ -41,8 +43,6 @@ const createFieldByFieldset = (fieldData) => {
 
 
 const createFieldset = (fieldset, fields, fieldsets) => {
-  renderedFieldsets.push(fieldset);
-
   const filteredFieldData = fields.filter((field) => field.fieldset === fieldset);
 
   // Если в fieldset только 1 поле - это не fieldset
@@ -50,6 +50,11 @@ const createFieldset = (fieldset, fields, fieldsets) => {
     const [{label, type, id, option}] = filteredFieldData;
     return createSingleField(label, type, id, option);
   }
+
+  renderedFieldsets.push(fieldset);
+  console.log('создали филдсет')
+  usedFormElements.fieldset = true;
+  usedFormElements.formItem = true;
 
   const fieldsetData = fieldsets.find((fieldsetData) => fieldsetData.name === fieldset);
   const {legend, legendVH} = fieldsetData;
@@ -71,14 +76,14 @@ const createTextarea = (label, type, id, option) => {
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
 <textarea class='form__control form__control--${type}' type='${type}' id='${id}'
-${value ? `value="${value}"` : ''} ${readonly ? 'readonly' : ''} ${required ? 'required' : ''}>
-${placeholder ? placeholder : ''}
+${value ? `value="${value}"` : ''} ${readonly ? 'readonly' : ''} ${required ? 'required' : ''} ${placeholder ? `placeholder="${placeholder}"` : ''}>
 </textarea>`
   );
 }
 
 
 const createSelect = (label, type, id, option) => {
+  usedFormElements.select = true;
   const {placeholder, name} = option;
 
   return (`<span class="form__label form__label--select" id="${id}">
@@ -117,6 +122,11 @@ ${readonly ? 'readonly' : ''} ${required ? 'required' : ''}/>`
 
 const createFieldWithCheck = (label, type, id, option) => {
   const {required, placeholder, value, readonly, checked, name} = option;
+  if (type === 'checkbox') {
+    usedFormElements.checkbox = true;
+  } else if (type === 'radio') {
+    usedFormElements.radio = true;
+  }
 
   return (
     `<label class='form__label form__label--${type}' for='${id}'>${label}</label>
@@ -176,6 +186,7 @@ const createFields = (fields, fieldsets) => {
 
 
 const createSubmitButton = (text) => {
+  usedFormElements.button = true;
   return `<button class="form__button-submit" type='submit'>${text}</button>`;
 }
 
@@ -188,13 +199,13 @@ const createFormTemplate = ({form, fields, fieldsets}) => {
 ${autocomplete ? `autocomplete="${autocomplete}"` : ''}
 ${enctype ? `enctype="${enctype}"` : ''} method='${method}'>
         <h2 class='form__title'>${title}</h2>
-        <div class="demo__form-wrapper form-wrapper container">
+        <div class="demo__form-wrapper form-wrapper form__container">
           ${createFields(fields, fieldsets)}
           ${createSubmitButton(btnText)}
         </div>
 
 
-        <style>
+        <style class="form__style">
 
         </style>
     </form>`
@@ -211,6 +222,18 @@ export default class Form extends AbstractView {
 
   getTemplate() {
     return createFormTemplate(this._data);
+  }
+
+  getCSS() {
+    console.log(usedFormElements);
+    const usedElements =[];
+    Object.entries(usedFormElements).map((el) => {
+      if (el[1] === true) {
+        usedElements.push(el[0])
+      }
+    });
+
+    return usedElements.reduce((total, el) => total += CSSStore[el],'');
   }
 }
 
