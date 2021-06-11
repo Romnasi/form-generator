@@ -1,4 +1,4 @@
-import {data} from "./mock/data";
+import {data} from "./json/data";
 import {render, RenderPosition} from "./utils/utils";
 import Form from "./generator/generator";
 

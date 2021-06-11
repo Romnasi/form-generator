@@ -13,7 +13,7 @@
   <meta name="theme-color" content="#fafafa">
 </head>
 
-<body>
+<body class="body">
   <main class="page-main">
     <section class="page-main__demo demo">
       <h1 class="demo__title">Демо</h1>
@@ -21,219 +21,165 @@
     </section>
   </main>
 
-<!--  <div class="form__select container">-->
-<!--    <span class="form__label form__label&#45;&#45;select" id="gibridLabel">-->
-<!--      Фруктики-->
-<!--    </span>-->
-<!--    <div class="form__select-wrapper">-->
-<!--      <select class="form__select-native" aria-labelledby="gibridLabel">-->
-<!--        <option value="sel" disabled="" selected=""> Select role...</option>-->
-<!--        <option value="ds">UI/UX Designer</option>-->
-<!--        <option value="fe">Frontend Engineer</option>-->
-<!--        <option value="be">Backend Engineer</option>-->
-<!--        <option value="qa">QA Engineer</option>-->
-<!--        <option value="un">Unicorn</option>-->
-<!--        <option value="ds">UI/UX Designer</option>-->
-<!--        <option value="fe">Frontend Engineer</option>-->
-<!--        <option value="be">Backend Engineer</option>-->
-<!--        <option value="qa">QA Engineer</option>-->
-<!--        <option value="un">Unicorn</option>-->
-<!--      </select>-->
-
-<!--      <div class="form__select-custom js-selectCustom" aria-hidden="true">-->
-<!--        <div class="form__select-custom&#45;&#45;trigger">Select role...</div>-->
-<!--        <div class="selectCustom-options">-->
-<!--          <div class="selectCustom-option" data-value="ds">UI/UX Designer</div>-->
-<!--          <div class="selectCustom-option" data-value="fe">Frontend Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="be">Backend Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="qa">QA Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="un">Unicorn</div>-->
-<!--          <div class="selectCustom-option" data-value="ds">UI/UX Designer</div>-->
-<!--          <div class="selectCustom-option" data-value="fe">Frontend Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="be">Backend Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="qa">QA Engineer</div>-->
-<!--          <div class="selectCustom-option" data-value="un">Unicorn</div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-
-
-
-
   <script src="index.js"></script>
 
   <script>
-    const elSelectNative = document.getElementsByClassName("form__select-native")[0];
-    const elSelectCustom = document.getElementsByClassName("js-selectCustom")[0];
-    const elSelectCustomBox = elSelectCustom.children[0];
-    const elSelectCustomOpts = elSelectCustom.children[1];
-    const customOptsList = Array.from(elSelectCustomOpts.children);
-    const optionsCount = customOptsList.length;
-    const defaultLabel = elSelectCustomBox.getAttribute("data-value");
-
+    const form = document.querySelector('.form');
+    let currentSelect = '';
     let optionChecked = "";
     let optionHoveredIndex = -1;
 
-    // Toggle custom select visibility when clicking the box
-    elSelectCustomBox.addEventListener("click", (e) => {
-      const isClosed = !elSelectCustom.classList.contains("isActive");
 
-      if (isClosed) {
-        openSelectCustom();
-      } else {
-        closeSelectCustom();
+    form.addEventListener('click', (evt) => {
+
+      if (evt.target.classList.contains('form__select-custom--trigger')) {
+        currentSelect = evt.target.parentElement.parentElement;
+        setSelectHandler(currentSelect);
       }
-    });
-
-    function openSelectCustom() {
-      elSelectCustom.classList.add("isActive");
-      // Remove aria-hidden in case this was opened by a user
-      // who uses AT (e.g. Screen Reader) and a mouse at the same time.
-      elSelectCustom.setAttribute("aria-hidden", false);
-
-      if (optionChecked) {
-        const optionCheckedIndex = customOptsList.findIndex(
-          (el) => el.getAttribute("data-value") === optionChecked
-        );
-        updateCustomSelectHovered(optionCheckedIndex);
+      if (evt.target.classList.contains('form__select-native')) {
+        currentSelect = evt.target.parentElement;
+        setSelectHandler(currentSelect);
       }
 
-      // Add related event listeners
-      document.addEventListener("click", watchClickOutside);
-      document.addEventListener("keydown", supportKeyboardNavigation);
-    }
+    })
 
-    function closeSelectCustom() {
-      elSelectCustom.classList.remove("isActive");
+    const setSelectHandler = (currentSelect) => {
+      const elSelectNative = currentSelect.getElementsByClassName("form__select-native")[0];
+      const elSelectCustom = currentSelect.getElementsByClassName("js-selectCustom")[0];
+      const elSelectCustomBox = elSelectCustom.children[0];
+      const elSelectCustomOpts = elSelectCustom.children[1];
+      const customOptsList = Array.from(elSelectCustomOpts.children);
+      const optionsCount = customOptsList.length;
+      const defaultLabel = elSelectCustomBox.getAttribute("data-value");
 
-      elSelectCustom.setAttribute("aria-hidden", true);
+        const isClosed = !elSelectCustom.classList.contains("isActive");
 
-      updateCustomSelectHovered(-1);
-
-      // Remove related event listeners
-      document.removeEventListener("click", watchClickOutside);
-      document.removeEventListener("keydown", supportKeyboardNavigation);
-    }
-
-    function updateCustomSelectHovered(newIndex) {
-      const prevOption = elSelectCustomOpts.children[optionHoveredIndex];
-      const option = elSelectCustomOpts.children[newIndex];
-
-      if (prevOption) {
-        prevOption.classList.remove("isHover");
-      }
-      if (option) {
-        option.classList.add("isHover");
-      }
-
-      optionHoveredIndex = newIndex;
-    }
-
-    function updateCustomSelectChecked(value, text) {
-      const prevValue = optionChecked;
-
-      const elPrevOption = elSelectCustomOpts.querySelector(
-        `[data-value="${prevValue}"`
-      );
-      const elOption = elSelectCustomOpts.querySelector(`[data-value="${value}"`);
-
-      if (elPrevOption) {
-        elPrevOption.classList.remove("isActive");
-      }
-
-      if (elOption) {
-        elOption.classList.add("isActive");
-      }
-
-      elSelectCustomBox.textContent = text;
-      optionChecked = value;
-    }
-
-    function watchClickOutside(e) {
-      const didClickedOutside = !elSelectCustom.contains(event.target);
-      if (didClickedOutside) {
-        closeSelectCustom();
-      }
-    }
-
-    function supportKeyboardNavigation(evt) {
-      // press down -> go next
-      if (evt.keyCode === 40 && optionHoveredIndex < optionsCount - 1) {
-        let index = optionHoveredIndex;
-        e.preventDefault(); // prevent page scrolling
-        updateCustomSelectHovered(optionHoveredIndex + 1);
-      }
-
-      // press up -> go previous
-      if (event.keyCode === 38 && optionHoveredIndex > 0) {
-        e.preventDefault(); // prevent page scrolling
-        updateCustomSelectHovered(optionHoveredIndex - 1);
-      }
-
-      // press Enter or space -> select the option
-      if (event.keyCode === 13 || event.keyCode === 32) {
-        e.preventDefault();
-
-        const option = elSelectCustomOpts.children[optionHoveredIndex];
-        const value = option && option.getAttribute("data-value");
-
-        if (value) {
-          elSelectNative.value = value;
-          updateCustomSelectChecked(value, option.textContent);
+        if (isClosed) {
+          openSelectCustom();
+        } else {
+          closeSelectCustom();
         }
-        closeSelectCustom();
+
+      function openSelectCustom() {
+        elSelectCustom.classList.add("isActive");
+
+        elSelectCustom.setAttribute("aria-hidden", false);
+
+        if (optionChecked) {
+          const optionCheckedIndex = customOptsList.findIndex(
+            (el) => el.getAttribute("data-value") === optionChecked
+          );
+          updateCustomSelectHovered(optionCheckedIndex);
+        }
+
+        document.addEventListener("click", watchClickOutside);
+        document.addEventListener("keydown", supportKeyboardNavigation);
       }
 
-      // press ESC -> close selectCustom
-      if (event.keyCode === 27) {
-        closeSelectCustom();
+      function closeSelectCustom() {
+        elSelectCustom.classList.remove("isActive");
+
+        elSelectCustom.setAttribute("aria-hidden", true);
+
+        updateCustomSelectHovered(-1);
+
+        document.removeEventListener("click", watchClickOutside);
+        document.removeEventListener("keydown", supportKeyboardNavigation);
       }
+
+      function updateCustomSelectHovered(newIndex) {
+        const prevOption = elSelectCustomOpts.children[optionHoveredIndex];
+        const option = elSelectCustomOpts.children[newIndex];
+
+        if (prevOption) {
+          prevOption.classList.remove("isHover");
+        }
+        if (option) {
+          option.classList.add("isHover");
+        }
+
+        optionHoveredIndex = newIndex;
+      }
+
+      function updateCustomSelectChecked(value, text) {
+        const prevValue = optionChecked;
+
+        const elPrevOption = elSelectCustomOpts.querySelector(
+          `[data-value="${prevValue}"`
+        );
+        const elOption = elSelectCustomOpts.querySelector(`[data-value="${value}"`);
+
+        if (elPrevOption) {
+          elPrevOption.classList.remove("isActive");
+        }
+
+        if (elOption) {
+          elOption.classList.add("isActive");
+        }
+
+        elSelectCustomBox.textContent = text;
+        optionChecked = value;
+      }
+
+      function watchClickOutside(evt) {
+        const didClickedOutside = !elSelectCustom.contains(evt.target);
+        if (didClickedOutside) {
+          closeSelectCustom();
+        }
+      }
+
+      function supportKeyboardNavigation(evt) {
+        if (evt.keyCode === 40 && optionHoveredIndex < optionsCount - 1) {
+          let index = optionHoveredIndex;
+          evt.preventDefault(); // prevent page scrolling
+          updateCustomSelectHovered(optionHoveredIndex + 1);
+        }
+
+        if (evt.keyCode === 38 && optionHoveredIndex > 0) {
+          evt.preventDefault(); // prevent page scrolling
+          updateCustomSelectHovered(optionHoveredIndex - 1);
+        }
+
+        if (evt.keyCode === 13 || evt.keyCode === 32) {
+          evt.preventDefault();
+
+          const option = elSelectCustomOpts.children[optionHoveredIndex];
+          const value = option && option.getAttribute("data-value");
+
+          if (value) {
+            elSelectNative.value = value;
+            updateCustomSelectChecked(value, option.textContent);
+          }
+          closeSelectCustom();
+        }
+
+        if (evt.keyCode === 27) {
+          closeSelectCustom();
+        }
+      }
+
+      elSelectNative.addEventListener("change", (evt) => {
+        const value = evt.target.value;
+        const elRespectiveCustomOption = elSelectCustomOpts.querySelectorAll(`[data-value="${value}"]`)[0];
+        updateCustomSelectChecked(value, elRespectiveCustomOption.textContent);
+      });
+
+      customOptsList.forEach(function (elOption, index) {
+        elOption.addEventListener("click", (e) => {
+          const value = e.target.getAttribute("data-value");
+
+          elSelectNative.value = value;
+          updateCustomSelectChecked(value, e.target.textContent);
+          closeSelectCustom();
+        });
+
+        elOption.addEventListener("mouseenter", (e) => {
+          updateCustomSelectHovered(index);
+        });
+      });
     }
-
-    // Update selectCustom value when selectNative is changed.
-    elSelectNative.addEventListener("change", (e) => {
-      const value = e.target.value;
-      const elRespectiveCustomOption = elSelectCustomOpts.querySelectorAll(
-        `[data-value="${value}"]`
-      )[0];
-
-      updateCustomSelectChecked(value, elRespectiveCustomOption.textContent);
-    });
-
-    // Update selectCustom value when an option is clicked or hovered
-    customOptsList.forEach(function (elOption, index) {
-      elOption.addEventListener("click", (e) => {
-        const value = e.target.getAttribute("data-value");
-
-        // Sync native select to have the same value
-        elSelectNative.value = value;
-        updateCustomSelectChecked(value, e.target.textContent);
-        closeSelectCustom();
-      });
-
-      elOption.addEventListener("mouseenter", (e) => {
-        updateCustomSelectHovered(index);
-      });
-    });
   </script>
+
 
 </body>
 
